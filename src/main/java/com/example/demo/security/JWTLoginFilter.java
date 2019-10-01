@@ -31,13 +31,15 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 		AccountCredentials credentials = new ObjectMapper()
 				.readValue(request.getInputStream(), AccountCredentials.class);
 		
-		return getAuthenticationManager().authenticate(
+		 Authentication a = getAuthenticationManager().authenticate(
 				new UsernamePasswordAuthenticationToken(
 						credentials.getUsername(), 
 						credentials.getPassword(), 
 						Collections.emptyList()
 						)
 				);
+		 
+		 return a;
 	}
 	
 	@Override
