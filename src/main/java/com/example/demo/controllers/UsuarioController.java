@@ -40,12 +40,12 @@ public class UsuarioController {
 	}
 
 	@RequestMapping(value = "/usuario", method = RequestMethod.POST)
-	public Usuario salvaUsuario(@Valid @RequestBody Usuario usuario) {
+	public Usuario inserirUsuario(@Valid @RequestBody Usuario usuario) {
 		return usuarioRepository.save(usuario);
 	}
 
 	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Usuario> atualizaUsuario(@PathVariable(value = "id") Integer id, @Valid @RequestBody Usuario newUsuario) {
+	public ResponseEntity<Usuario> atualizarUsuario(@PathVariable(value = "id") Integer id, @Valid @RequestBody Usuario newUsuario) {
 		Optional<Usuario> oldUsuario = usuarioRepository.findById(id);
 		if (oldUsuario.isPresent()) {
 			Usuario usuario = oldUsuario.get();
@@ -59,7 +59,7 @@ public class UsuarioController {
 	}
 
 	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Object> deleteUsuario(@PathVariable(value = "id") Integer id) {
+	public ResponseEntity<Object> deletarUsuario(@PathVariable(value = "id") Integer id) {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 		if (usuario.isPresent()) {
 			usuarioRepository.delete(usuario.get());
