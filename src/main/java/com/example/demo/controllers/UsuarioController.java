@@ -44,6 +44,20 @@ public class UsuarioController {
 		return usuarioRepository.save(usuario);
 	}
 
+	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Usuario> atualizaUsuario(@PathVariable(value = "id") Integer id, @Valid @RequestBody Usuario newUsuario) {
+		Optional<Usuario> oldUsuario = usuarioRepository.findById(id);
+		if (oldUsuario.isPresent()) {
+			Usuario usuario = oldUsuario.get();
+			usuario.setEmail(newUsuario.getEmail());
+			usuario.setSenha(newUsuario.getSenha());
+			usuarioRepository.save(usuario);
+			return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Object> deleteUsuario(@PathVariable(value = "id") Integer id) {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
