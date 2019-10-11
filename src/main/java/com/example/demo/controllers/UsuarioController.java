@@ -23,12 +23,12 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	@RequestMapping(value = "/usuarios", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/usuarios", method = RequestMethod.GET)
 	public List<Usuario> getUsuarios() {
 		return usuarioRepository.findAll();
 	}
 
-	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/usuario/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Usuario> getUsuario(@PathVariable(value = "id") Integer id) {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 
@@ -39,12 +39,12 @@ public class UsuarioController {
 		}
 	}
 
-	@RequestMapping(value = "/usuario", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/usuario", method = RequestMethod.POST)
 	public Usuario inserirUsuario(@Valid @RequestBody Usuario usuario) {
 		return usuarioRepository.save(usuario);
 	}
 
-	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/api/usuario/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Usuario> atualizarUsuario(@PathVariable(value = "id") Integer id, @Valid @RequestBody Usuario newUsuario) {
 		Optional<Usuario> oldUsuario = usuarioRepository.findById(id);
 		if (oldUsuario.isPresent()) {
@@ -58,7 +58,7 @@ public class UsuarioController {
 		}
 	}
 
-	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/usuario/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Object> deletarUsuario(@PathVariable(value = "id") Integer id) {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 		if (usuario.isPresent()) {
