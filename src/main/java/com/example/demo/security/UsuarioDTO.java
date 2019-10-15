@@ -1,8 +1,12 @@
 package com.example.demo.security;
 
+import javax.validation.constraints.Email;
+
 public class UsuarioDTO {
 
+	@Email
 	private String email;
+	
 	private String senha;
 
 	public String getEmail() {
