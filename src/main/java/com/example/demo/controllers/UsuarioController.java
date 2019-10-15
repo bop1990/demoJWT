@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.Usuario;
 import com.example.demo.repository.UsuarioRepository;
+import com.example.demo.security.UsuarioDTO;
 
 @RestController
 public class UsuarioController {
@@ -25,15 +26,12 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-//	@Autowired
-//	private PasswordEncoder passwordEncoder;
-
-	@RequestMapping(value = "/api/usuarios", method = RequestMethod.GET)
+	@RequestMapping(value = "/usuarios", method = RequestMethod.GET)
 	public List<Usuario> getUsuarios() {
 		return usuarioRepository.findAll();
 	}
 
-	@RequestMapping(value = "/api/usuario/{email}", method = RequestMethod.GET)
+	@RequestMapping(value = "/usuario/{email}", method = RequestMethod.GET)
 	public ResponseEntity<Usuario> getUsuario(@PathVariable(value = "email") String email) {
 		Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
 		
@@ -44,15 +42,16 @@ public class UsuarioController {
 		}
 	}
 
-	@RequestMapping(value = "/api/addUsuario", method = RequestMethod.POST)
-	public Usuario inserirUsuario(@Valid @RequestBody Usuario usuario) {
+	@RequestMapping(value = "/addUsuario", method = RequestMethod.POST)
+	public Usuario inserirUsuario(@Valid @RequestBody UsuarioDTO usuario) {
+		Usuario usuarioGravar = new Usuario(usuario.getEmail(), usuario.getSenha(), true);
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-		return usuarioRepository.save(usuario);
+		usuarioGravar.setSenha(passwordEncoder.encode(usuarioGravar.getSenha()));
+		return usuarioRepository.saveAndFlush(usuarioGravar);
 	}
 
-	@RequestMapping(value = "/api/atualizaUsuario/{email}", method = RequestMethod.PUT)
-	public ResponseEntity<Usuario> atualizarUsuario(@PathVariable(value = "email") String email, @Valid @RequestBody Usuario newUsuario) {
+	@RequestMapping(value = "/atualizaUsuario/{email}", method = RequestMethod.PUT)
+	public ResponseEntity<Usuario> atualizarUsuario(@PathVariable(value = "email") String email, @RequestBody Usuario newUsuario) {
 		Optional<Usuario> oldUsuario = usuarioRepository.findByEmail(email);
 		if (oldUsuario.isPresent()) {
 			Usuario usuario = oldUsuario.get();
@@ -64,7 +63,7 @@ public class UsuarioController {
 		}
 	}
 
-	@RequestMapping(value = "/api/usuario/{email}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/usuario/{email}", method = RequestMethod.DELETE)
 	public ResponseEntity<Object> deletarUsuario(@PathVariable(value = "email") String email) {
 		Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
 		if (usuario.isPresent()) {

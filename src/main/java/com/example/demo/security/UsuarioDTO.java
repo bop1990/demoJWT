@@ -1,6 +1,6 @@
 package com.example.demo.security;
 
-public class AccountCredentials {
+public class UsuarioDTO {
 
 	private String email;
 	private String senha;

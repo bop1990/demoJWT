@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.HttpHeaders;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,7 @@ public class TokenAuthenticationService {
 	static final long EXPIRATION_TIME = 860_000_000;
 	static final String SECRET = "MySecret";
 	static final String TOKEN_PREFIX = "Bearer";
-	static final String HEADER_STRING = "Authorization";
+	static final String HEADER_STRING = HttpHeaders.AUTHORIZATION;
 
 	static void addAuthentication(HttpServletResponse response, String email) {
 		String JWT = Jwts.builder().setSubject(email)

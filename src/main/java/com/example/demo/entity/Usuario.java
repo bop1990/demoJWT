@@ -45,16 +45,27 @@ public class Usuario implements UserDetails {
 
 	@Column
 	@NotNull
+	@JsonIgnore
 	private boolean ativo;
 
 	@Column(columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
 	@CreationTimestamp
 	@JsonIgnore
 	private Date criadoEm;
-	
+
 	@JsonIgnore
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Perfil> perfis;
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<Perfil> perfis;
+
+	public Usuario() {
+	}
+
+	public Usuario(@NotNull @Email String email, @NotNull String senha, @NotNull boolean ativo) {
+		super();
+		this.email = email;
+		this.senha = senha;
+		this.ativo = ativo;
+	}
 
 	public Integer getId() {
 		return id;
@@ -95,7 +106,7 @@ public class Usuario implements UserDetails {
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
 	}
-	
+
 	public List<Perfil> getPerfis() {
 		return perfis;
 	}
@@ -104,39 +115,46 @@ public class Usuario implements UserDetails {
 		this.perfis = perfis;
 	}
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return getPerfis();
 	}
 
+	@JsonIgnore
 	@Override
 	public String getPassword() {
 		return getSenha();
 	}
 
+	@JsonIgnore
 	@Override
 	public String getUsername() {
 		return getEmail();
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		return isAtivo();
