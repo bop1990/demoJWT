@@ -20,8 +20,8 @@ public class TokenAuthenticationService {
 	static final String TOKEN_PREFIX = "Bearer";
 	static final String HEADER_STRING = "Authorization";
 
-	static void addAuthentication(HttpServletResponse response, String username) {
-		String JWT = Jwts.builder().setSubject(username)
+	static void addAuthentication(HttpServletResponse response, String email) {
+		String JWT = Jwts.builder().setSubject(email)
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
 
@@ -33,11 +33,11 @@ public class TokenAuthenticationService {
 
 		if (token != null) {
 			// faz parse do token
-			String user = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody()
+			String usuario = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody()
 					.getSubject();
 
-			if (user != null) {
-				return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+			if (usuario != null) {
+				return new UsernamePasswordAuthenticationToken(usuario, null, Collections.emptyList());
 			}
 		}
 		return null;
