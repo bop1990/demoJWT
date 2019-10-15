@@ -26,6 +26,8 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
+	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
 	@RequestMapping(value = "/usuarios", method = RequestMethod.GET)
 	public List<Usuario> getUsuarios() {
 		return usuarioRepository.findAll();
@@ -42,16 +44,15 @@ public class UsuarioController {
 		}
 	}
 
-	@RequestMapping(value = "/addUsuario", method = RequestMethod.POST)
+	@RequestMapping(value = "/usuario/add", method = RequestMethod.POST)
 	public Usuario inserirUsuario(@Valid @RequestBody UsuarioDTO usuario) {
 		Usuario usuarioGravar = new Usuario(usuario.getEmail(), usuario.getSenha(), true);
-		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		usuarioGravar.setSenha(passwordEncoder.encode(usuarioGravar.getSenha()));
 		return usuarioRepository.saveAndFlush(usuarioGravar);
 	}
 
-	@RequestMapping(value = "/atualizaUsuario/{email}", method = RequestMethod.PUT)
-	public ResponseEntity<Usuario> atualizarUsuario(@PathVariable(value = "email") String email, @RequestBody Usuario newUsuario) {
+	@RequestMapping(value = "/usuario/atualizarEmail/{email}", method = RequestMethod.PUT)
+	public ResponseEntity<Usuario> atualizarEmailUsuario(@PathVariable(value = "email") String email, @RequestBody Usuario newUsuario) {
 		Optional<Usuario> oldUsuario = usuarioRepository.findByEmail(email);
 		if (oldUsuario.isPresent()) {
 			Usuario usuario = oldUsuario.get();
@@ -61,6 +62,19 @@ public class UsuarioController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@RequestMapping(value = "/usuario/atualizarSenha", method = RequestMethod.POST)
+	public ResponseEntity<Object> atualizarSenha(@Valid @RequestBody UsuarioDTO usuario) {
+		Optional<Usuario> usuarioBD = usuarioRepository.findByEmail(usuario.getEmail());
+		if (usuarioBD.isPresent()) {
+			usuarioBD.get().setSenha(passwordEncoder.encode(usuario.getSenha()));
+			usuarioRepository.save(usuarioBD.get());
+			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
 	}
 
 	@RequestMapping(value = "/usuario/{email}", method = RequestMethod.DELETE)

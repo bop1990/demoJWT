@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class LoginController {
 	
-	@ApiOperation("Login.")
+	@ApiOperation("Login")
 	@PostMapping("/login")
 	public void fakeLogin(@RequestBody UsuarioDTO credentials) {
 	    throw new IllegalStateException("Método não executado. Implementado pelo filtro do Spring Security.");
